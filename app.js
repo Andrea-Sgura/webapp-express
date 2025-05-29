@@ -7,6 +7,10 @@ const app = express();
 // Definizione numero di porta su cui il server rimane in ascolto
 const port = process.env.SERVER_PORT || 3000;
 
+// Importazione dei middleware errorHandler + notFound
+const errorsHandler = require("./middlewares/errorsHandler");
+const notFound = require("./middlewares/notFound");
+
 // Utilizzo del middleware per asset statici
 app.use(express.static(`public`));
 
@@ -17,6 +21,12 @@ app.use(express.json());
 app.get("/", (req, res) => {
     res.send(`Movies API server`)
 });
+
+// Utilizzo errorsHandler middleware
+app.use(errorsHandler);
+
+// Utilizzo notFound middleware
+app.use(notFound);
 
 // Server in ascolto
 app.listen(port, () => {
