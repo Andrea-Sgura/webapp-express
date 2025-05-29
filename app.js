@@ -7,6 +7,9 @@ const app = express();
 // Definizione numero di porta su cui il server rimane in ascolto
 const port = process.env.SERVER_PORT || 3000;
 
+// Importazione del router
+const movieRouter = require(`./routers/movieRouter`);
+
 // Importazione dei middleware errorHandler + notFound
 const errorsHandler = require("./middlewares/errorsHandler");
 const notFound = require("./middlewares/notFound");
@@ -21,6 +24,9 @@ app.use(express.json());
 app.get("/", (req, res) => {
     res.send(`Movies API server`)
 });
+
+// Utilizzo del router
+app.use(`/api/movies`, movieRouter);
 
 // Utilizzo errorsHandler middleware
 app.use(errorsHandler);
