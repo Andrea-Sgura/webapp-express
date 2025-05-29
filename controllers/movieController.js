@@ -12,7 +12,30 @@ const index = (req, res) => {
 
 // SHOW
 const show = (req, res) => {
-    console.log(`Dettaglio Film`)
+    const { id } = req.params
+
+    const movieSql = "SELECT * FROM movies WHERE id=?"
+
+    const reviewsSql = `
+    SELECT *
+    FROM reviews
+    WHERE movie_id = ?
+    `
+
+    connection.query(movieSql, [id], (err, moviesResult) => {
+        if (err) return res.status(500).json({ error: "Database query failed: " + err });
+
+        const movie = moviesResult[0];
+
+        // Esecuzione della query che recupera le reviews
+        connection.query(reviewsSql, [id], (err, reviewsResult) => {
+            if (err) return res.status(500).json({ error: "Database query failed: " + err });
+
+            movie.reviews = reviewsResult;
+
+            res.json(movie)
+        })
+    })
 }
 
 module.exports = {
